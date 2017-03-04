@@ -15,11 +15,10 @@ import tree.Tree;
 public class TreeManager {
 
     Scanner read = new Scanner(System.in);
-    Tree tree = new Tree();
     int sons = -1, height = 0;
     LinkedList<String> levels = new LinkedList<>();
     
-    public void createTree() {
+    public void createTree(Tree tree) {
         String string;
         int op = 1, level = 0, position = 0;
         do {
@@ -27,14 +26,15 @@ public class TreeManager {
             string = read.next();
             level = read.nextInt();
             position = read.nextInt();
-            Tree.add(string, level, position);
+            tree.add(string, level, position);
             System.out.println("Desea ingresar mas nodos 1-Si, 0-No");
             op = read.nextInt();
         } while (op == 1);
-        //height(root, 0);
+        height(tree.getRoot(), 0);
+        tree.setHeight(height);
     }
 
-    public void showTree() {
+    public void showTree(Tree tree, Node root) {
         LinkedList<Integer> travel = new LinkedList<>();
         System.out.println("Mostrar Arbol por 1.pre-orden - 2.in-orden 3.post-orden - 4.nivel-orden - 5.intento grafico");
         System.out.println("OPCION: ");
@@ -56,7 +56,7 @@ public class TreeManager {
             case 5:
                 //int num = read.nextInt(); //fix, cousins from uncles...
                 //Node p = findNode(num);
-                graphicTree(root);
+                graphicTree(tree, root);
                 break;
             default:
                 break;
@@ -66,13 +66,15 @@ public class TreeManager {
         }
     }
 
-    public void graphicTree(Node p) { //fix, missing Grandchildren from a missing son... I really need to fix this?...
-        if (root != null) {                  //fix, add spaces for a better view...
+    public void graphicTree(Tree tree, Node p) { //fix, missing Grandchildren from a missing son... I really need to fix this?...
+        if (tree.getRoot() != null) {            //fix, add spaces for a better view...
+            int hght = tree.getHeight();
             int level = p.getLevel() + 1;
             //System.out.println(level + "<" + height);
             System.out.println(p.getString() + "-");
-            while (level <= height) {
-                levelNodes(root, level);
+            while (level <= hght) {
+                clean();
+                levelNodes(tree.getRoot(), level);
                 for (String node : levels) {
                     System.out.print(node + "-");
                 }
@@ -180,39 +182,76 @@ public class TreeManager {
         }
     }
 
-    public int uncle(int num) {
-        int sw = 1;
-        Node p = root, antp = null, grandpa = null;
-        while (p != null && sw == 1) {
-            if (num == p.getString()) {
-                if (grandpa != null) {
-                    if (grandpa.getRight() != null) {
-                        if (grandpa.getRight().getString() == antp.getString()) {
-                            if (grandpa.getLeft() != null) {
-                                return grandpa.getLeft().getString();
-                            }
-                        } else {
-                            return grandpa.getRight().getString();
-                        }
-                    }
-                }
-                sw = 0;
-            } else if (num < p.getString()) {
-                grandpa = antp;
-                antp = p;
-                p = p.getLeft();
-            } else {
-                grandpa = antp;
-                antp = p;
-                p = p.getRight();
-            }
-        }
-        return -1;
-    }
-
     public void clean() {
         sons = -1;
         height = 0;
         levels = new LinkedList<>();
     }
+    
+    
+    /**
+     * @param args the command line arguments
+     */
+    /*public static void main(String[] args) {
+        int op, num;
+        do {
+            System.out.println(
+                    "NOTA: el valor -1 en mi laboratorio es nulo, vacio\n"
+                    + "porfavor usar arboles de numeros positivos\n\n"
+                    + "Opciones:\n"
+                    + " 1. Crear Arbol\n"
+                    + " 2. Mostrar Arbol\n"
+                    + " 3. Informacion detallada del nodo (punto 2 y punto 5)\n"
+                    + " 4. Eliminar nodo\n"
+                    + " 5. Agregar nodo\n"
+                    + " 0. Salir"
+            );
+            System.out.println("OPCION: ");
+            op = read.nextInt();
+            System.out.println("");
+            switch (op) {
+                case 1:
+                    setRoot(null);
+                    createTree();
+                    break;
+                case 2:
+                    showTree();
+                    break;
+                case 3:
+                    clean();
+                    System.out.println("Nodo:");
+                    num = read.nextInt();
+                    System.out.println("");
+                    graphicTree(getRoot());
+                    System.out.println("");
+                    Node p = findNode(num);
+                    height(p, 0);
+                    offspring(p);
+                    System.out.println(leaf(p) + "- hoja");
+                    System.out.println(getHeight() + "- altura");
+                    System.out.println(getSons() + "- descendencia");
+                    System.out.println(nodes(p) + "- nodos del arbol/sub-arbol");
+                    System.out.println(level(num) + "- nivel");
+                    System.out.println(uncle(num) + "- tio");
+                    break;
+                case 4:
+                    System.out.println("Nodo:");
+                    num = read.nextInt();
+                    deleteNode(num);
+                    break;
+                case 5:
+                    createTree();
+                    break;
+                case 6:
+
+                    break;
+                default:
+                    op = 0;
+                    break;
+            }
+            System.out.println("\n");
+            //System.out.println("\n\n");
+        } while (op != 0);
+    }*/
 }
+

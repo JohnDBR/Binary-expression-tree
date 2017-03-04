@@ -9,7 +9,7 @@ package tree;
  *
  * @author John
  */
-public class Node {
+public class Node implements java.io.Serializable {
 
     private String string;
     private Node left, right;

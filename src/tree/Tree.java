@@ -12,18 +12,18 @@ import java.util.Scanner;
  *
  * @author John
  */
-public class Tree {
+public class Tree implements java.io.Serializable {
 
-    static Scanner read = new Scanner(System.in);
-    private static Node root;
-    private static int sons = -1;
-    private static int height = 0;
+    Scanner read = new Scanner(System.in);
+    private Node root;
+    private int sons = -1;
+    private int height = 0;
 
     public void Tree() {
         this.setRoot(null);
     }
 
-    static public void add(String string, int level, int position) {
+    public void add(String string, int level, int position) {
         int maxPosition = maxPosition(level);
         String positions = allPositions(maxPosition);
         if (position < maxPosition) {
@@ -63,14 +63,14 @@ public class Tree {
         }
     }
 
-    static public void deleteNode(String string) {
+    public void deleteNode(String string) {
         Node antp = findFather(string, root, null);
         if (antp != null) {
             if (antp.getRight() != null) {
                 if (antp.getRight().getString().equals(string)) {
                     antp.setRight(null);
                 }
-            }else if (antp.getLeft()!= null) {
+            } else if (antp.getLeft() != null) {
                 if (antp.getLeft().getString().equals(string)) {
                     antp.setLeft(null);
                 }
@@ -78,7 +78,7 @@ public class Tree {
         }
     }
 
-    static public boolean exist(String string, Node p, boolean bool) {
+    public boolean exist(String string, Node p, boolean bool) {
         if (p != null) {
             if (p.getString().equals(string)) {
                 bool = true;
@@ -92,7 +92,7 @@ public class Tree {
         return bool;
     }
 
-    static public Node findNode(String string, Node p, Node target) {
+    public Node findNode(String string, Node p, Node target) {
         if (p != null) {
             if (p.getString().equals(string)) {
                 target = p;
@@ -106,13 +106,13 @@ public class Tree {
         return target;
     }
 
-    static public Node findFather(String string, Node p, Node target) {
+    public Node findFather(String string, Node p, Node target) {
         if (p != null) {
             if (p.getRight() != null) {
                 if (p.getRight().getString().equals(string)) {
                     target = p;
                 }
-            }else if (p.getLeft()!= null) {
+            } else if (p.getLeft() != null) {
                 if (p.getLeft().getString().equals(string)) {
                     target = p;
                 }
@@ -126,7 +126,7 @@ public class Tree {
         return target;
     }
 
-    static public int maxPosition(int level) {
+    public int maxPosition(int level) {
         int maxPosition = 1;
         for (int i = 0; i < level; i++) {
             maxPosition = maxPosition + maxPosition * 2;
@@ -134,7 +134,7 @@ public class Tree {
         return maxPosition;
     }
 
-    static public String allPositions(int maxPositions) {
+    public String allPositions(int maxPositions) {
         String positions = "";
         for (int i = 0; i < maxPositions; i++) {
             positions = positions + i;
@@ -143,93 +143,28 @@ public class Tree {
     }
 
     //GETTERS SETTERS
-    public static Node getRoot() {
+    public Node getRoot() {
         return root;
     }
 
-    public static void setRoot(Node aRoot) {
+    public void setRoot(Node aRoot) {
         root = aRoot;
     }
 
-    public static int getSons() {
+    public int getSons() {
         return sons;
     }
 
-    public static void setSons(int aSons) {
+    public void setSons(int aSons) {
         sons = aSons;
     }
 
-    public static int getHeight() {
+    public int getHeight() {
         return height;
     }
 
-    public static void setHeight(int aHeight) {
+    public void setHeight(int aHeight) {
         height = aHeight;
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        int op, num;
-        do {
-            System.out.println(
-                    "NOTA: el valor -1 en mi laboratorio es nulo, vacio\n"
-                    + "porfavor usar arboles de numeros positivos\n\n"
-                    + "Opciones:\n"
-                    + " 1. Crear Arbol\n"
-                    + " 2. Mostrar Arbol\n"
-                    + " 3. Informacion detallada del nodo (punto 2 y punto 5)\n"
-                    + " 4. Eliminar nodo\n"
-                    + " 5. Agregar nodo\n"
-                    + " 0. Salir"
-            );
-            System.out.println("OPCION: ");
-            op = read.nextInt();
-            System.out.println("");
-            switch (op) {
-                case 1:
-                    setRoot(null);
-                    createTree();
-                    break;
-                case 2:
-                    showTree();
-                    break;
-                case 3:
-                    clean();
-                    System.out.println("Nodo:");
-                    num = read.nextInt();
-                    System.out.println("");
-                    graphicTree(getRoot());
-                    System.out.println("");
-                    Node p = findNode(num);
-                    height(p, 0);
-                    offspring(p);
-                    System.out.println(leaf(p) + "- hoja");
-                    System.out.println(getHeight() + "- altura");
-                    System.out.println(getSons() + "- descendencia");
-                    System.out.println(nodes(p) + "- nodos del arbol/sub-arbol");
-                    System.out.println(level(num) + "- nivel");
-                    System.out.println(uncle(num) + "- tio");
-                    break;
-                case 4:
-                    System.out.println("Nodo:");
-                    num = read.nextInt();
-                    deleteNode(num);
-                    break;
-                case 5:
-                    createTree();
-                    break;
-                case 6:
-
-                    break;
-                default:
-                    op = 0;
-                    break;
-            }
-            System.out.println("\n");
-            //System.out.println("\n\n");
-        } while (op != 0);
     }
 
 }
