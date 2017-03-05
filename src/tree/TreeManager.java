@@ -8,17 +8,19 @@ package tree;
 import java.util.LinkedList;
 import java.util.Scanner;
 import tree.Tree;
+
 /**
  *
  * @author John
  */
 public class TreeManager {
 
-    Scanner read = new Scanner(System.in);
-    int sons = -1, height = 0;
-    LinkedList<String> levels = new LinkedList<>();
-    
-    public void createTree(Tree tree) {
+    static Scanner read = new Scanner(System.in);
+    static Tree tree = new Tree();
+    static int sons = -1, height = 0;
+    static LinkedList<String> levels = new LinkedList<>();
+
+    static public void createTree(Tree tree) {
         String string;
         int op = 1, level = 0, position = 0;
         do {
@@ -34,8 +36,9 @@ public class TreeManager {
         tree.setHeight(height);
     }
 
-    public void showTree(Tree tree, Node root) {
-        LinkedList<Integer> travel = new LinkedList<>();
+    static public void showTree(Tree tree) {
+        Node root = tree.getRoot();
+        LinkedList<String> travel = new LinkedList<>();
         System.out.println("Mostrar Arbol por 1.pre-orden - 2.in-orden 3.post-orden - 4.nivel-orden - 5.intento grafico");
         System.out.println("OPCION: ");
         int op = read.nextInt();
@@ -61,12 +64,12 @@ public class TreeManager {
             default:
                 break;
         }
-        for (Integer num : travel) {
-            System.out.print(num + "-");
+        for (String string : travel) {
+            System.out.print(string + "-");
         }
     }
 
-    public void graphicTree(Tree tree, Node p) { //fix, missing Grandchildren from a missing son... I really need to fix this?...
+    static public void graphicTree(Tree tree, Node p) { //fix, missing Grandchildren from a missing son... I really need to fix this?...
         if (tree.getRoot() != null) {            //fix, add spaces for a better view...
             int hght = tree.getHeight();
             int level = p.getLevel() + 1;
@@ -84,7 +87,7 @@ public class TreeManager {
         }
     }
 
-    public void preOrder(Node p, LinkedList travel) {
+    static public void preOrder(Node p, LinkedList travel) {
         if (p != null) {
             travel.add(p.getString());
             preOrder(p.getLeft(), travel);
@@ -92,15 +95,15 @@ public class TreeManager {
         }
     }
 
-    public void inOrder(Node p, LinkedList travel) {
+    static public void inOrder(Node p, LinkedList travel) {
         if (p != null) {
             inOrder(p.getLeft(), travel);
-            travel.add(p.getRight());
+            travel.add(p.getString());
             inOrder(p.getRight(), travel);
         }
     }
 
-    public void postOrder(Node p, LinkedList travel) {
+    static public void postOrder(Node p, LinkedList travel) {
         if (p != null) {
             postOrder(p.getLeft(), travel);
             postOrder(p.getRight(), travel);
@@ -108,7 +111,7 @@ public class TreeManager {
         }
     }
 
-    public void levelOrder(Node root, LinkedList travel) {
+    static public void levelOrder(Node root, LinkedList travel) {
         if (root != null) {
             LinkedList<Node> queue = new LinkedList<>();
             queue.addLast(root);
@@ -125,7 +128,7 @@ public class TreeManager {
         }
     }
 
-    public void levelNodes(Node p, int level) {
+    static public void levelNodes(Node p, int level) {
         if (p != null) {
             String string = p.getString();
             int lvl = p.getLevel();
@@ -145,7 +148,7 @@ public class TreeManager {
         }
     }
 
-    public boolean leaf(Node p) {
+    static public boolean leaf(Node p) {
         if (p != null) {
             if (p.getLeft() != null || p.getRight() != null) {
                 return false;
@@ -155,7 +158,7 @@ public class TreeManager {
         return false;
     }
 
-    public void offspring(Node p) {
+    static public void offspring(Node p) {
         if (p != null) {
             sons++;
             offspring(p.getLeft());
@@ -163,13 +166,13 @@ public class TreeManager {
         }
     }
 
-    public int nodes(Node p) {
+    static public int nodes(Node p) {
         clean();
         offspring(p);
         return sons + 1;
     }
 
-    public void height(Node p, int num) {
+    static public void height(Node p, int num) {
         if (p != null) {
             //if (num > height) { //Doesnt matter...
             //    height = num;
@@ -182,22 +185,21 @@ public class TreeManager {
         }
     }
 
-    public void clean() {
+    static public void clean() {
         sons = -1;
         height = 0;
         levels = new LinkedList<>();
     }
-    
-    
+
     /**
      * @param args the command line arguments
      */
-    /*public static void main(String[] args) {
-        int op, num;
+    public static void main(String[] args) {
+        String string;
+        int op;
         do {
             System.out.println(
-                    "NOTA: el valor -1 en mi laboratorio es nulo, vacio\n"
-                    + "porfavor usar arboles de numeros positivos\n\n"
+                    "NOTA: el valor -1 en mi laboratorio es nulo, vacio\n\n"
                     + "Opciones:\n"
                     + " 1. Crear Arbol\n"
                     + " 2. Mostrar Arbol\n"
@@ -211,36 +213,36 @@ public class TreeManager {
             System.out.println("");
             switch (op) {
                 case 1:
-                    setRoot(null);
-                    createTree();
+                    createTree(tree);
                     break;
                 case 2:
-                    showTree();
+                    showTree(tree);
                     break;
                 case 3:
                     clean();
                     System.out.println("Nodo:");
-                    num = read.nextInt();
+                    string = read.next();
                     System.out.println("");
-                    graphicTree(getRoot());
-                    System.out.println("");
-                    Node p = findNode(num);
-                    height(p, 0);
-                    offspring(p);
-                    System.out.println(leaf(p) + "- hoja");
-                    System.out.println(getHeight() + "- altura");
-                    System.out.println(getSons() + "- descendencia");
-                    System.out.println(nodes(p) + "- nodos del arbol/sub-arbol");
-                    System.out.println(level(num) + "- nivel");
-                    System.out.println(uncle(num) + "- tio");
+                    Node p = tree.findNode(string, tree.getRoot(), null);
+                    if (p != null) {
+                        graphicTree(tree, tree.getRoot());
+                        System.out.println("");
+                        height(p, 0);
+                        offspring(p);
+                        System.out.println(leaf(p) + "- hoja");
+                        System.out.println(height + "- altura");
+                        System.out.println(sons + "- descendencia");
+                        System.out.println(nodes(p) + "- nodos del arbol/sub-arbol");
+                        System.out.println(p.getLevel() + "- nivel");
+                    }
                     break;
                 case 4:
                     System.out.println("Nodo:");
-                    num = read.nextInt();
-                    deleteNode(num);
+                    string = read.next();
+                    tree.deleteNode(string);
                     break;
                 case 5:
-                    createTree();
+                    createTree(tree);
                     break;
                 case 6:
 
@@ -252,6 +254,5 @@ public class TreeManager {
             System.out.println("\n");
             //System.out.println("\n\n");
         } while (op != 0);
-    }*/
+    }
 }
-

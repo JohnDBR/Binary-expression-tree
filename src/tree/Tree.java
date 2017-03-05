@@ -30,6 +30,8 @@ public class Tree implements java.io.Serializable {
             if (!exist(string, root, false)) {
                 Node q = new Node(string);
                 if (getRoot() == null && level == 0 && position == 0) {
+                    q.setLevel(0);
+                    q.setPosition(0);
                     setRoot(q);
                     setSons(getSons() + 1);
                 } else {
@@ -48,14 +50,19 @@ public class Tree implements java.io.Serializable {
                             p = p.getRight();
                             positions = secondHalf;
                         }
+                        if (levelCounter == level && p != null) {
+                            p = null;
+                            levelCounter = -1;
+                        }
                     }
                     if (levelCounter == level) {
+                        q.setLevel(level);
+                        q.setPosition(position);
+                        setSons(getSons() + 1);
                         if (firstHalf.contains("" + position)) {
                             antp.setLeft(q);
-                            setSons(getSons() + 1);
                         } else {
                             antp.setRight(q);
-                            setSons(getSons() + 1);
                         }
                     }
                 }
@@ -64,6 +71,7 @@ public class Tree implements java.io.Serializable {
     }
 
     public void deleteNode(String string) {
+        Node p = findNode(string, root, null);
         Node antp = findFather(string, root, null);
         if (antp != null) {
             if (antp.getRight() != null) {
@@ -75,6 +83,8 @@ public class Tree implements java.io.Serializable {
                     antp.setLeft(null);
                 }
             }
+        } else if (p != null) {
+            root = null;
         }
     }
 
@@ -97,7 +107,7 @@ public class Tree implements java.io.Serializable {
             if (p.getString().equals(string)) {
                 target = p;
             } else {
-                target = findNode(string, p.getRight(), target);
+                target = findNode(string, p.getLeft(), target);
                 if (target == null) {
                     target = findNode(string, p.getRight(), target);
                 }
