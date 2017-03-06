@@ -195,7 +195,7 @@ public class TreeManager {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String string;
+        String string = "";
         int op;
         do {
             System.out.println(
@@ -203,7 +203,7 @@ public class TreeManager {
                     + "Opciones:\n"
                     + " 1. Crear Arbol\n"
                     + " 2. Mostrar Arbol\n"
-                    + " 3. Informacion detallada del nodo (punto 2 y punto 5)\n"
+                    + " 3. Informacion detallada del nodo\n"
                     + " 4. Eliminar nodo\n"
                     + " 5. Agregar nodo\n"
                     + " 0. Salir"
@@ -245,7 +245,20 @@ public class TreeManager {
                     createTree(tree);
                     break;
                 case 6:
-
+                    System.out.println("1.True - 2.False");
+                    op = read.nextInt();
+                    if (op == 1) {
+                        string = tree.run(true);
+                    } else if (op == 2) {
+                        string = tree.run(false);
+                    }
+                    if (string.equals("No se!")) {
+                        String a, q;
+                        System.out.println("Digite informacion a aprender: (pregunta Enter respuesta)");
+                        q = read.next();
+                        a = read.next();
+                        tree.learn(q, a);
+                    }
                     break;
                 default:
                     op = 0;

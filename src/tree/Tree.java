@@ -16,8 +16,8 @@ public class Tree implements java.io.Serializable {
 
     Scanner read = new Scanner(System.in);
     private Node root;
-    private int sons = -1;
-    private int height = 0;
+    private int sons = -1, height = 0;
+    private LinkedList<Node> stack = new LinkedList<>();
 
     public void Tree() {
         this.setRoot(null);
@@ -155,6 +155,45 @@ public class Tree implements java.io.Serializable {
         return positions;
     }
 
+    public boolean leaf(Node p) {
+        if (p != null) {
+            if (p.getLeft() != null || p.getRight() != null) {
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public String run(boolean direction) {
+        String string = "Arbol vacio";
+        if (root != null) {
+            string = "No se!";
+            Node p = null;
+            if (stack.isEmpty()) {
+                stack.add(root);
+            }
+            if (direction) {
+                p = stack.getLast().getLeft();
+            } else {
+                p = stack.getLast().getRight();
+            }
+            if (p != null) {
+                string = p.getString();
+            }
+        }
+        return string;
+    }
+
+    public void learn(String question, String answer) {
+        if (!stack.isEmpty()) {
+            Node qstn = new Node(question), answr = new Node(answer), p = stack.getLast();
+            p.setRight(qstn);
+            qstn.setLeft(answr);
+            stack.clear();
+        }
+    }
+
     //GETTERS SETTERS
     public Node getRoot() {
         return root;
@@ -178,6 +217,14 @@ public class Tree implements java.io.Serializable {
 
     public void setHeight(int aHeight) {
         height = aHeight;
+    }
+
+    public LinkedList<Node> getStack() {
+        return stack;
+    }
+
+    public void setStack(LinkedList<Node> stack) {
+        this.stack = stack;
     }
 
 }
