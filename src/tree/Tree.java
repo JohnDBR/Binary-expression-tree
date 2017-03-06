@@ -78,7 +78,8 @@ public class Tree implements java.io.Serializable {
                 if (antp.getRight().getString().equals(string)) {
                     antp.setRight(null);
                 }
-            } else if (antp.getLeft() != null) {
+            }
+            if (antp.getLeft() != null) {
                 if (antp.getLeft().getString().equals(string)) {
                     antp.setLeft(null);
                 }
@@ -122,14 +123,16 @@ public class Tree implements java.io.Serializable {
                 if (p.getRight().getString().equals(string)) {
                     target = p;
                 }
-            } else if (p.getLeft() != null) {
+            }
+            if (p.getLeft() != null) {
                 if (p.getLeft().getString().equals(string)) {
                     target = p;
                 }
-            } else {
+            }
+            if (target == null) {
                 target = findFather(string, p.getRight(), target);
                 if (target == null) {
-                    target = findFather(string, p.getRight(), target);
+                    target = findFather(string, p.getLeft(), target);
                 }
             }
         }
@@ -139,7 +142,7 @@ public class Tree implements java.io.Serializable {
     public int maxPosition(int level) {
         int maxPosition = 1;
         for (int i = 0; i < level; i++) {
-            maxPosition = maxPosition + maxPosition * 2;
+            maxPosition = maxPosition * 2;
         }
         return maxPosition;
     }
