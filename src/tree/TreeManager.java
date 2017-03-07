@@ -32,8 +32,8 @@ public class TreeManager {
             System.out.println("Desea ingresar mas nodos 1-Si, 0-No");
             op = read.nextInt();
         } while (op == 1);
-        height(tree.getRoot(), 0);
-        tree.setHeight(height);
+        //height(tree.getRoot(), 0);
+        //tree.setHeight(height);
     }
 
     static public void showTree(Tree tree) {
@@ -245,13 +245,14 @@ public class TreeManager {
                     createTree(tree);
                     break;
                 case 6:
-                    System.out.println("1.True - 2.False");
+                    System.out.println("1.False - 2.True");
                     op = read.nextInt();
                     if (op == 1) {
-                        string = tree.run(true);
-                    } else if (op == 2) {
                         string = tree.run(false);
+                    } else if (op == 2) {
+                        string = tree.run(true);
                     }
+                    System.out.println(string);
                     if (string.equals("No se!")) {
                         String a, q;
                         System.out.println("Digite informacion a aprender: (pregunta Enter respuesta)");
