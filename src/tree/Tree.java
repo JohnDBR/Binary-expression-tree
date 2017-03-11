@@ -13,16 +13,16 @@ import java.util.Scanner;
  * @author John
  */
 public class Tree implements java.io.Serializable {
-    
+
     Scanner read = new Scanner(System.in);
     private Node root;
     private int sons = -1, height = 0;
     private LinkedList<Node> stack = new LinkedList<>();
-    
+
     public void Tree() {
         this.setRoot(null);
     }
-    
+
     public void add(String string, int level, int position) {
         int maxPosition = maxPosition(level);
         String positions = allPositions(maxPosition);
@@ -70,7 +70,7 @@ public class Tree implements java.io.Serializable {
         }
         height(root, 0);
     }
-    
+
     public void deleteNode(String string) {
         Node p = findNode(string, root, null);
         Node antp = findFather(string, root, null);
@@ -89,7 +89,7 @@ public class Tree implements java.io.Serializable {
             root = null;
         }
     }
-    
+
     public boolean exist(String string, Node p, boolean bool) {
         if (p != null) {
             if (p.getString().equals(string)) {
@@ -103,7 +103,7 @@ public class Tree implements java.io.Serializable {
         }
         return bool;
     }
-    
+
     public Node findNode(String string, Node p, Node target) {
         if (p != null) {
             if (p.getString().equals(string)) {
@@ -117,7 +117,7 @@ public class Tree implements java.io.Serializable {
         }
         return target;
     }
-    
+
     public Node findFather(String string, Node p, Node target) {
         if (p != null) {
             if (p.getRight() != null) {
@@ -139,7 +139,7 @@ public class Tree implements java.io.Serializable {
         }
         return target;
     }
-    
+
     public int maxPosition(int level) {
         int maxPosition = 1;
         for (int i = 0; i < level; i++) {
@@ -147,7 +147,7 @@ public class Tree implements java.io.Serializable {
         }
         return maxPosition;
     }
-    
+
     public String allPositions(int maxPositions) {
         String positions = "";
         for (int i = 0; i < maxPositions; i++) {
@@ -155,7 +155,7 @@ public class Tree implements java.io.Serializable {
         }
         return positions;
     }
-    
+
     private boolean leaf(Node p) {
         if (p != null) {
             if (p.getLeft() != null || p.getRight() != null) {
@@ -165,7 +165,7 @@ public class Tree implements java.io.Serializable {
         }
         return false;
     }
-    
+
     private void height(Node p, int num) {
         if (p != null) {
             //if (num > height) { //Doesnt matter...
@@ -178,7 +178,7 @@ public class Tree implements java.io.Serializable {
             height(p.getRight(), num + 1);
         }
     }
-    
+
     public String run(boolean direction) {
         String string = "Arbol vacio";
         if (root != null) {
@@ -200,55 +200,85 @@ public class Tree implements java.io.Serializable {
         }
         return string;
     }
-    
+
     public void learn(String question, String answer) {
         if (!stack.isEmpty()) {
             Node qstn = new Node(question), answr = new Node(answer), p = stack.getLast();
             qstn.setLevel(p.getLevel() + 1);                        //I can use method add too, but I dont care...
             qstn.setPosition((p.getPosition() + 1) * 2 - 2);        //(p.getPosition() + 1)*2 - 1 Right son...
-                                                                
+
             answr.setLevel(qstn.getLevel() + 1);
             answr.setPosition((qstn.getPosition() + 1) * 2 - 1);    //(p.getPosition() + 1)*2 - 2 Left son...
-            
+
             qstn.setRight(answr);
-            
+
             p.setLeft(qstn);
-            height(root, 0);            
+            height(root, 0);
             stack.clear();
         }
+    }
+
+    public LinkedList<Node> biggerBranch(Node p, LinkedList<Node> list) {
+        LinkedList<Node> bigger = new LinkedList<>();
+        if (p != null) {
+            list.add(p);
+            LinkedList<Node> aux1 = biggerBranch(p.getLeft(), list);
+            LinkedList<Node> aux2 = biggerBranch(p.getRight(), list);
+            int a, b;
+            try {
+                a = aux1.size();
+            } catch (Exception e) {
+                a = 0;
+            }
+            try {
+                b = aux2.size();
+            } catch (Exception e) {
+                b = 0;
+            }
+            if (a > b) {
+                bigger.addAll(aux1);
+            } else {
+                bigger.addAll(aux2);
+            }
+            //list.remove(p);
+            list.pollLast();
+        } else {
+            bigger.addAll(list);
+        }
+        return bigger;
     }
 
     //GETTERS SETTERS
     public Node getRoot() {
         return root;
     }
-    
+
     public void setRoot(Node aRoot) {
         root = aRoot;
     }
-    
+
     public int getSons() {
         return sons;
     }
-    
+
     public void setSons(int aSons) {
         sons = aSons;
     }
-    
+
     public int getHeight() {
         return height;
     }
-    
+
     public void setHeight(int aHeight) {
         height = aHeight;
     }
-    
+
     public LinkedList<Node> getStack() {
         return stack;
     }
-    
+
     public void setStack(LinkedList<Node> stack) {
         this.stack = stack;
     }
-    
+
 }

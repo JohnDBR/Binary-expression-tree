@@ -206,6 +206,8 @@ public class TreeManager {
                     + " 3. Informacion detallada del nodo\n"
                     + " 4. Eliminar nodo\n"
                     + " 5. Agregar nodo\n"
+                    + " 6. Recorrer Arbol mediante booleanos\n"
+                    + " 7. Rama mas grande\n"
                     + " 0. Salir"
             );
             System.out.println("OPCION: ");
@@ -259,6 +261,14 @@ public class TreeManager {
                         q = read.next();
                         a = read.next();
                         tree.learn(q, a);
+                    }
+                    break;
+                case 7:
+                    System.out.print("La Rama mas larga es: ");
+                    LinkedList<Node> list = new LinkedList<>();
+                    list = tree.biggerBranch(tree.getRoot(), list);
+                    for (Node node : list) {
+                        System.out.print(node.getString() + "-");
                     }
                     break;
                 default:
