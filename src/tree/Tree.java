@@ -141,17 +141,20 @@ public class Tree implements java.io.Serializable {
     }
 
     public int maxPosition(int level) {
-        int maxPosition = 1;
-        for (int i = 0; i < level; i++) {
-            maxPosition = maxPosition * 2;
-        }
-        return maxPosition;
+        //for (int i = 0; i < level; i++) {
+        //    maxPosition = maxPosition * 2;
+        //}
+        return (int) Math.pow(2, level);
     }
 
     public String allPositions(int maxPositions) {
         String positions = "";
         for (int i = 0; i < maxPositions; i++) {
-            positions = positions + i;
+            if (i < 10) {
+                positions = positions + i + "-";
+            } else {
+                positions = positions + i;
+            }
         }
         return positions;
     }
