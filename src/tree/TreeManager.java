@@ -284,6 +284,18 @@ public class TreeManager {
                     //    System.out.print(node.getString() + "-");
                     //}
                     break;
+                case 8:
+                    //System.out.println(tree.allNodes(tree.getRoot()));
+                    System.out.println("1.Guardar - 2.Cargar: - 3.Cargar Todo (el primero) ");
+                    int a = read.nextInt();
+                    if (a == 1) {
+                        tree.save();
+                    } else if (a == 2) {
+                        tree = Tree.load(0);
+                    } else {
+                        tree = Tree.loadAll().getFirst();
+                    }
+                    break;
                 default:
                     op = 0;
                     break;
