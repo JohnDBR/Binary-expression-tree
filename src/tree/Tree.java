@@ -5,8 +5,13 @@
  */
 package tree;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import linkedlist.LinkedList;
-import java.util.Scanner;
 
 /**
  *
@@ -14,13 +19,30 @@ import java.util.Scanner;
  */
 public class Tree implements java.io.Serializable {
 
-    Scanner read = new Scanner(System.in);
+    private String name;
     private Node root;
-    private int sons = -1, height = 0;
     private LinkedList<Node> stack = new LinkedList<>();
+    private int sons = -1, height = 0;
 
-    public void Tree() {
+    private final String fileRoute;
+    private File storer;
+    private static int id;
+
+    public Tree() {
+        fileRoute = "./treeStorer.txt";
+        if (checkFile()) {
+            setId();
+        }
         this.setRoot(null);
+        this.name = "";
+    }
+
+    public Tree(String name) {
+        fileRoute = "./treeStorer.txt";
+        if (checkFile()) {
+            setId();
+        }
+        this.name = name;
     }
 
     public void add(String string, int level, int position) {
@@ -251,6 +273,153 @@ public class Tree implements java.io.Serializable {
         return bigger;
     }
 
+    //BUFFERING METHODS
+    private boolean checkFile() {
+        storer = new File(fileRoute);
+        if (!storer.exists()) {
+            try {
+                storer.createNewFile();
+                id = 0;
+                return false;
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    private void setId() {
+        try {
+            FileReader fr = new FileReader(storer);
+            BufferedReader br = new BufferedReader(fr);
+
+            int cont = 0;
+            while (br.readLine() != null) {
+                cont++;
+            }
+            id = cont;
+            //System.out.println(id);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public int save() {
+        try {
+            String c = "|";
+            File fileModification = new File("./modification.txt");
+            fileModification.createNewFile();
+
+            FileReader fr = new FileReader(storer);
+            BufferedReader br = new BufferedReader(fr);
+
+            FileWriter fw = new FileWriter(fileModification);
+            PrintWriter pw = new PrintWriter(fw);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                pw.println(line);
+            }
+
+            line = this.getClass().getSimpleName() + c + id + c + name + c + allNodes(root);
+            id++;
+
+            pw.println(line);
+
+            pw.close();
+            fw.close();
+
+            br.close();
+            fr.close();
+
+            boolean delete;
+            boolean rename;
+            do {
+                delete = storer.delete();
+                rename = fileModification.renameTo(storer);
+                storer = fileModification;
+                System.out.println(delete + " " + rename);
+            } while (!(delete && rename));
+            return (id - 1);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return -1;
+    }
+
+    private String allNodes(Node p) {
+        String c = ";", s = ",", line = "";
+        if (p != null) {
+            line = line + p.getString() + s + p.getLevel() + s + p.getPosition() + c + allNodes(p.getLeft()) + allNodes(p.getRight());
+        }
+        return line;
+    }
+
+    public static Tree load(int id) {
+        try {
+            File f = new File("./treeStorer.txt");
+            if (f.exists()) {
+
+                FileReader fr = new FileReader(f);
+                BufferedReader br = new BufferedReader(fr);
+
+                int sw = 0;
+                String line;
+                while ((line = br.readLine()) != null && sw == 0) {
+                    String[] field = line.split("\\|");
+                    if (field[1].equals(Integer.toString(id))) {
+
+                        Tree tree = new Tree(field[2]);
+                        String[] nodes = field[3].split("\\;");
+                        for (String node : nodes) {
+                            String[] attr = node.split("\\,");
+                            tree.add(attr[0], Integer.valueOf(attr[1]), Integer.valueOf(attr[2]));
+                        }
+
+                        br.close();
+                        fr.close();
+
+                        return tree;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public static LinkedList<Tree> loadAll() {
+        try {
+            File f = new File("./treeStorer.txt");
+            if (f.exists()) {
+                FileReader fr = new FileReader(f);
+                BufferedReader br = new BufferedReader(fr);
+
+                LinkedList<Tree> forest = new LinkedList<>();
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] field = line.split("\\|");
+                    Tree tree = new Tree(field[2]);
+                    String[] nodes = field[3].split("\\;");
+                    for (String node : nodes) {
+                        String[] attr = node.split("\\,");
+                        tree.add(attr[0], Integer.valueOf(attr[1]), Integer.valueOf(attr[2]));
+                    }
+                    forest.add(tree);
+                }
+
+                br.close();
+                fr.close();
+
+                return forest;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
     //GETTERS SETTERS
     public Node getRoot() {
         return root;
@@ -282,6 +451,14 @@ public class Tree implements java.io.Serializable {
 
     public void setStack(LinkedList<Node> stack) {
         this.stack = stack;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }
