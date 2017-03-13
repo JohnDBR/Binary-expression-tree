@@ -27,7 +27,7 @@ public class Tree implements java.io.Serializable {
     private final String fileRoute;
     private File storer;
     private final int ownId;
-    private static int id;
+    private static int id = 0;
 
     public Tree() {
         fileRoute = "./treeStorer.txt";
@@ -36,8 +36,7 @@ public class Tree implements java.io.Serializable {
         }
         this.setRoot(null);
         this.name = "";
-        ownId = id;
-        id++;
+        ownId = id++;
     }
 
     public Tree(String name) {
@@ -346,9 +345,11 @@ public class Tree implements java.io.Serializable {
             boolean rename;
             do {
                 delete = storer.delete();
-                rename = fileModification.renameTo(storer);
-                storer = fileModification;
-                //System.out.println(delete + " " + rename);
+                //rename = fileModification.renameTo(storer);
+                rename = fileModification.renameTo(new File(fileRoute));
+                fileModification.delete();
+                //storer = fileModification;
+                System.out.println(delete + " " + rename);
             } while (!(delete && rename));
             return (id - 1);
         } catch (Exception ex) {

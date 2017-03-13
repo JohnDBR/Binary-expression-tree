@@ -255,11 +255,11 @@ public class TreeManager {
             System.out.println("");
             switch (op) {
                 case 1:
-                    tree = new Tree();
-                    createTree(tree);
-                    if (tree.getRoot() != null) {
-                        forest.add(tree);
-                        justShow(tree);
+                    Tree t = new Tree();
+                    createTree(t);
+                    if (t.getRoot() != null) {
+                        forest.add(t);
+                        justShow(t);
                     }
                     break;
                 case 2:
@@ -348,7 +348,7 @@ public class TreeManager {
 
                 case 8:
                     //System.out.println(tree.allNodes(tree.getRoot()));
-                    System.out.println("1.Guardar - 2.Cargar: - 3.Cargar Todo (el primero) ");
+                    System.out.println("1.Guardar - 2.Cargar: - 3.Guardar todo - 4.Cargar Todo (el primero) ");
                     int a = read.nextInt();
                     switch (a) {
                         case 1:
@@ -362,6 +362,9 @@ public class TreeManager {
                             System.out.println("Arbol:");
                             treeIndex = read.nextInt();
                             forest.add(Tree.load(treeIndex));
+                            break;
+                        case 3:
+                            saveAll();
                             break;
                         default:
                             forest.addAll(Tree.loadAll());
