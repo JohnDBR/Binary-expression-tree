@@ -26,6 +26,7 @@ public class Tree implements java.io.Serializable {
 
     private final String fileRoute;
     private File storer;
+    private final int ownId;
     private static int id;
 
     public Tree() {
@@ -35,6 +36,8 @@ public class Tree implements java.io.Serializable {
         }
         this.setRoot(null);
         this.name = "";
+        ownId = id;
+        id++;
     }
 
     public Tree(String name) {
@@ -43,6 +46,8 @@ public class Tree implements java.io.Serializable {
             setId();
         }
         this.name = name;
+        ownId = id;
+        id++;
     }
 
     public void add(String string, int level, int position) {
@@ -316,15 +321,20 @@ public class Tree implements java.io.Serializable {
             FileWriter fw = new FileWriter(fileModification);
             PrintWriter pw = new PrintWriter(fw);
 
-            String line;
+            String line, sTree = this.getClass().getSimpleName() + c + ownId + c + name + c + allNodes(root);
+            boolean insert = false;
             while ((line = br.readLine()) != null) {
-                pw.println(line);
+                String[] field = line.split("\\|");
+                if (field[1].equals(Integer.toString(ownId))) {
+                    pw.println(sTree);
+                    insert = true;
+                } else {
+                    pw.println(line);
+                }
             }
-
-            line = this.getClass().getSimpleName() + c + id + c + name + c + allNodes(root);
-            id++;
-
-            pw.println(line);
+            if (!insert) {
+                pw.println(sTree);
+            }
 
             pw.close();
             fw.close();
@@ -338,7 +348,7 @@ public class Tree implements java.io.Serializable {
                 delete = storer.delete();
                 rename = fileModification.renameTo(storer);
                 storer = fileModification;
-                System.out.println(delete + " " + rename);
+                //System.out.println(delete + " " + rename);
             } while (!(delete && rename));
             return (id - 1);
         } catch (Exception ex) {

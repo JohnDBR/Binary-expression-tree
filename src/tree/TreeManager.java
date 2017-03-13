@@ -16,61 +16,73 @@ import tree.Tree;
 public class TreeManager {
 
     static Scanner read = new Scanner(System.in);
-    static Tree tree = new Tree();
+    static LinkedList<Tree> forest = new LinkedList();
     static int sons = -1, height = 0;
     static LinkedList<String> levels = new LinkedList<>();
 
     static public void createTree(Tree tree) {
-        String string;
-        int op = 1, level = 0, position = 0;
-        do {
-            System.out.println("Digite info del nodo: (contenido Enter nivel Enter posicion Enter)");
-            string = read.next();
-            level = read.nextInt();
-            position = read.nextInt();
-            tree.add(string, level, position);
-            System.out.println("Desea ingresar mas nodos 1-Si, 0-No");
-            op = read.nextInt();
-        } while (op == 1);
-        //height(tree.getRoot(), 0);
-        //tree.setHeight(height);
+        if (tree != null) {
+            String string;
+            int op = 1, level = 0, position = 0;
+            do {
+                System.out.println("Digite info del nodo: (contenido Enter nivel Enter posicion Enter)");
+                string = read.next();
+                level = read.nextInt();
+                position = read.nextInt();
+                tree.add(string, level, position);
+                System.out.println("Desea ingresar mas nodos 1-Si, 0-No");
+                op = read.nextInt();
+            } while (op == 1);
+            //height(tree.getRoot(), 0);
+            //tree.setHeight(height);
+        }
     }
 
     static public void showTree(Tree tree) {
-        Node root = tree.getRoot();
-        LinkedList<String> travel = new LinkedList<>();
-        System.out.println("Mostrar Arbol por 1.pre-orden - 2.in-orden 3.post-orden - 4.nivel-orden - 5.intento grafico");
-        System.out.println("OPCION: ");
-        int op = read.nextInt();
+        if (tree != null) {
+            Node root = tree.getRoot();
+            LinkedList<String> travel = new LinkedList<>();
+            System.out.println("Mostrar Arbol por 1.pre-orden - 2.in-orden 3.post-orden - 4.nivel-orden - 5.intento grafico");
+            System.out.println("OPCION: ");
+            int op = read.nextInt();
+            System.out.println("");
+            switch (op) {
+                case 1:
+                    preOrder(root, travel);
+                    break;
+                case 2:
+                    inOrder(root, travel);
+                    break;
+                case 3:
+                    postOrder(root, travel);
+                    break;
+                case 4:
+                    levelOrder(root, travel);
+                    break;
+                case 5:
+                    //int num = read.nextInt(); //fix, cousins from uncles...
+                    //Node p = findNode(num);
+                    graphicTree(tree, root);
+                    break;
+                default:
+                    break;
+            }
+            for (int i = 0; i < travel.size(); i++) {
+                String string = travel.get(i);
+                System.out.print(string + "-");
+            }
+            //for (String string : travel) {
+            //    System.out.print(string + "-");
+            //}
+        }
+    }
+
+    static public void justShow(Tree tree) {
         System.out.println("");
-        switch (op) {
-            case 1:
-                preOrder(root, travel);
-                break;
-            case 2:
-                inOrder(root, travel);
-                break;
-            case 3:
-                postOrder(root, travel);
-                break;
-            case 4:
-                levelOrder(root, travel);
-                break;
-            case 5:
-                //int num = read.nextInt(); //fix, cousins from uncles...
-                //Node p = findNode(num);
-                graphicTree(tree, root);
-                break;
-            default:
-                break;
+        if (tree != null) {
+            graphicTree(tree, tree.getRoot());
         }
-        for (int i = 0; i < travel.size(); i++) {
-            String string = travel.get(i);
-            System.out.print(string + "-");
-        }
-        //for (String string : travel) {
-        //    System.out.print(string + "-");
-        //}
+        System.out.println("");
     }
 
     static public void graphicTree(Tree tree, Node p) { //fix, missing Grandchildren from a missing son... I really need to fix this?...
@@ -200,12 +212,31 @@ public class TreeManager {
         levels = new LinkedList<>();
     }
 
+    static public Tree get(String name) {
+        for (int i = 0; i < forest.size(); i++) {
+            Tree tree = forest.get(i);
+            if (tree.getName().equals(name)) {
+                return tree;
+            }
+        }
+        return null;
+    }
+
+    static public void saveAll() {
+        if (forest != null) {
+            for (int i = 0; i < forest.size(); i++) {
+                forest.get(i).save();
+            }
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         String string = "";
-        int op;
+        int op, treeIndex;
+        Tree tree;
         do {
             System.out.println(
                     "NOTA: el valor -1 en mi laboratorio es nulo, vacio\n\n"
@@ -224,76 +255,117 @@ public class TreeManager {
             System.out.println("");
             switch (op) {
                 case 1:
+                    tree = new Tree();
                     createTree(tree);
+                    if (tree.getRoot() != null) {
+                        forest.add(tree);
+                        justShow(tree);
+                    }
                     break;
                 case 2:
-                    showTree(tree);
+                    System.out.println("Arbol:");
+                    treeIndex = read.nextInt();
+                    showTree(forest.get(treeIndex));
                     break;
                 case 3:
                     clean();
-                    System.out.println("Nodo:");
-                    string = read.next();
-                    System.out.println("");
-                    Node p = tree.findNode(string, tree.getRoot(), null);
-                    if (p != null) {
-                        graphicTree(tree, tree.getRoot());
+                    System.out.println("Arbol:");
+                    treeIndex = read.nextInt();
+                    if ((tree = forest.get(treeIndex)) != null) {
+                        System.out.println("Nodo:");
+                        string = read.next();
                         System.out.println("");
-                        height(p, 0);
-                        offspring(p);
-                        System.out.println(leaf(p) + "- hoja");
-                        System.out.println(height + "- altura");
-                        System.out.println(sons + "- descendencia");
-                        System.out.println(nodes(p) + "- nodos del arbol/sub-arbol");
-                        System.out.println(p.getLevel() + "- nivel");
+                        Node p = tree.findNode(string, tree.getRoot(), null);
+                        if (p != null) {
+                            graphicTree(tree, tree.getRoot());
+                            System.out.println("");
+                            height(p, 0);
+                            offspring(p);
+                            System.out.println(leaf(p) + "- hoja");
+                            System.out.println(height + "- altura");
+                            System.out.println(sons + "- descendencia");
+                            System.out.println(nodes(p) + "- nodos del arbol/sub-arbol");
+                            System.out.println(p.getLevel() + "- nivel");
+                        }
                     }
                     break;
                 case 4:
-                    System.out.println("Nodo:");
-                    string = read.next();
-                    tree.deleteNode(string);
+                    System.out.println("Arbol:");
+                    treeIndex = read.nextInt();
+                    if ((tree = forest.get(treeIndex)) != null) {
+                        System.out.println("Nodo:");
+                        string = read.next();
+                        tree.deleteNode(string);
+                        justShow(tree);
+                    }
                     break;
                 case 5:
-                    createTree(tree);
+                    System.out.println("Arbol:");
+                    treeIndex = read.nextInt();
+                    if ((tree = forest.get(treeIndex)) != null) {
+                        createTree(tree);
+                        justShow(tree);
+                    }
                     break;
                 case 6:
-                    System.out.println("1.False - 2.True");
-                    op = read.nextInt();
-                    if (op == 1) {
-                        string = tree.run(false);
-                    } else if (op == 2) {
-                        string = tree.run(true);
-                    }
-                    System.out.println(string);
-                    if (string.equals("No se!")) {
-                        String a, q;
-                        System.out.println("Digite informacion a aprender: (pregunta Enter respuesta)");
-                        q = read.next();
-                        a = read.next();
-                        tree.learn(q, a);
+                    System.out.println("Arbol:");
+                    treeIndex = read.nextInt();
+                    if ((tree = forest.get(treeIndex)) != null) {
+                        System.out.println("1.False - 2.True");
+                        op = read.nextInt();
+                        if (op == 1) {
+                            string = tree.run(false);
+                        } else if (op == 2) {
+                            string = tree.run(true);
+                        }
+                        System.out.println(string);
+                        if (string.equals("No se!")) {
+                            String a, q;
+                            System.out.println("Digite informacion a aprender: (pregunta Enter respuesta)");
+                            q = read.next();
+                            a = read.next();
+                            tree.learn(q, a);
+                        }
                     }
                     break;
                 case 7:
-                    System.out.print("La Rama mas larga es: ");
-                    LinkedList<Node> list = new LinkedList<>();
-                    list = tree.biggerBranch(tree.getRoot(), list);
-                    for (int i = 0; i < list.size(); i++) {
-                        Node node = list.get(i);
-                        System.out.print(node.getString() + "-");
+                    System.out.println("Arbol:");
+                    treeIndex = read.nextInt();
+                    if ((tree = forest.get(treeIndex)) != null) {
+                        System.out.print("La Rama mas larga es: ");
+                        LinkedList<Node> list = new LinkedList<>();
+                        list = tree.biggerBranch(tree.getRoot(), list);
+                        for (int i = 0; i < list.size(); i++) {
+                            Node node = list.get(i);
+                            System.out.print(node.getString() + "-");
+                        }
+                        //for (Node node : list) {
+                        //    System.out.print(node.getString() + "-");
+                        //}
+                        justShow(tree);
                     }
-                    //for (Node node : list) {
-                    //    System.out.print(node.getString() + "-");
-                    //}
                     break;
+
                 case 8:
                     //System.out.println(tree.allNodes(tree.getRoot()));
                     System.out.println("1.Guardar - 2.Cargar: - 3.Cargar Todo (el primero) ");
                     int a = read.nextInt();
-                    if (a == 1) {
-                        tree.save();
-                    } else if (a == 2) {
-                        tree = Tree.load(0);
-                    } else {
-                        tree = Tree.loadAll().getFirst();
+                    switch (a) {
+                        case 1:
+                            System.out.println("Arbol:");
+                            treeIndex = read.nextInt();
+                            if ((tree = forest.get(treeIndex)) != null) {
+                                tree.save();
+                            }
+                            break;
+                        case 2:
+                            System.out.println("Arbol:");
+                            treeIndex = read.nextInt();
+                            forest.add(Tree.load(treeIndex));
+                            break;
+                        default:
+                            forest.addAll(Tree.loadAll());
+                            break;
                     }
                     break;
                 default:
@@ -304,4 +376,5 @@ public class TreeManager {
             //System.out.println("\n\n");
         } while (op != 0);
     }
+
 }
