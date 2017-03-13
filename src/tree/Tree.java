@@ -5,7 +5,7 @@
  */
 package tree;
 
-import java.util.LinkedList;
+import linkedlist.LinkedList;
 import java.util.Scanner;
 
 /**

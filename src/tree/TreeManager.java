@@ -5,7 +5,7 @@
  */
 package tree;
 
-import java.util.LinkedList;
+import linkedlist.LinkedList;
 import java.util.Scanner;
 import tree.Tree;
 
@@ -64,9 +64,13 @@ public class TreeManager {
             default:
                 break;
         }
-        for (String string : travel) {
+        for (int i = 0; i < travel.size(); i++) {
+            String string = travel.get(i);
             System.out.print(string + "-");
         }
+        //for (String string : travel) {
+        //    System.out.print(string + "-");
+        //}
     }
 
     static public void graphicTree(Tree tree, Node p) { //fix, missing Grandchildren from a missing son... I really need to fix this?...
@@ -78,16 +82,20 @@ public class TreeManager {
             while (level <= hght) {
                 clean();
                 levelNodes(tree.getRoot(), level);
-                for (String node : levels) {
+                for (int i = 0; i < levels.size(); i++) {
+                    String node = levels.get(i);
                     System.out.print(node + "-");
                 }
+                //for (String node : levels) {
+                //    System.out.print(node + "-");
+                //}
                 System.out.println("");
                 level++;
             }
         }
     }
 
-    static public void preOrder(Node p, LinkedList travel) {
+    static public void preOrder(Node p, LinkedList<String> travel) {
         if (p != null) {
             travel.add(p.getString());
             preOrder(p.getLeft(), travel);
@@ -95,7 +103,7 @@ public class TreeManager {
         }
     }
 
-    static public void inOrder(Node p, LinkedList travel) {
+    static public void inOrder(Node p, LinkedList<String> travel) {
         if (p != null) {
             inOrder(p.getLeft(), travel);
             travel.add(p.getString());
@@ -103,7 +111,7 @@ public class TreeManager {
         }
     }
 
-    static public void postOrder(Node p, LinkedList travel) {
+    static public void postOrder(Node p, LinkedList<String> travel) {
         if (p != null) {
             postOrder(p.getLeft(), travel);
             postOrder(p.getRight(), travel);
@@ -111,12 +119,13 @@ public class TreeManager {
         }
     }
 
-    static public void levelOrder(Node root, LinkedList travel) {
+    static public void levelOrder(Node root, LinkedList<String> travel) {
         if (root != null) {
             LinkedList<Node> queue = new LinkedList<>();
             queue.addLast(root);
             while (queue.size() > 0) {
-                Node p = queue.pollFirst();
+                Node p = queue.getNode(0).getInfo();
+                queue.pollFirst();
                 travel.add(p.getString());
                 if (p.getLeft() != null) {
                     queue.addLast(p.getLeft());
@@ -267,9 +276,13 @@ public class TreeManager {
                     System.out.print("La Rama mas larga es: ");
                     LinkedList<Node> list = new LinkedList<>();
                     list = tree.biggerBranch(tree.getRoot(), list);
-                    for (Node node : list) {
+                    for (int i = 0; i < list.size(); i++) {
+                        Node node = list.get(i);
                         System.out.print(node.getString() + "-");
                     }
+                    //for (Node node : list) {
+                    //    System.out.print(node.getString() + "-");
+                    //}
                     break;
                 default:
                     op = 0;
