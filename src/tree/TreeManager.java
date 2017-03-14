@@ -15,12 +15,12 @@ import tree.Tree;
  */
 public class TreeManager {
 
-    static Scanner read = new Scanner(System.in);
-    static LinkedList<Tree> forest = new LinkedList();
-    static int sons = -1, height = 0;
-    static LinkedList<String> levels = new LinkedList<>();
+    Scanner read = new Scanner(System.in);
+    LinkedList<Tree> forest = new LinkedList();
+    int sons = -1, height = 0;
+    LinkedList<String> levels = new LinkedList<>();
 
-    static public void createTree(Tree tree) {
+    public void createTree(Tree tree) {
         if (tree != null) {
             String string;
             int op = 1, level = 0, position = 0;
@@ -36,9 +36,9 @@ public class TreeManager {
             //height(tree.getRoot(), 0);
             //tree.setHeight(height);
         }
-    }
+    } //Console method pls don't use it...
 
-    static public void showTree(Tree tree) {
+    public void showTree(Tree tree) {
         if (tree != null) {
             Node root = tree.getRoot();
             LinkedList<String> travel = new LinkedList<>();
@@ -75,17 +75,17 @@ public class TreeManager {
             //    System.out.print(string + "-");
             //}
         }
-    }
+    } //Console method pls don't use it...
 
-    static public void justShow(Tree tree) {
+    public void justShow(Tree tree) {
         System.out.println("");
         if (tree != null) {
             graphicTree(tree, tree.getRoot());
         }
         System.out.println("");
-    }
+    } //Console method pls don't use it...
 
-    static public void graphicTree(Tree tree, Node p) { //fix, missing Grandchildren from a missing son... I really need to fix this?...
+    public void graphicTree(Tree tree, Node p) { //fix, missing Grandchildren from a missing son... I really need to fix this?...
         if (tree.getRoot() != null) {            //fix, add spaces for a better view...
             int hght = tree.getHeight();
             int level = p.getLevel() + 1;
@@ -105,17 +105,17 @@ public class TreeManager {
                 level++;
             }
         }
-    }
+    } //Console method pls don't use it...
 
-    static public void preOrder(Node p, LinkedList<String> travel) {
+    public void preOrder(Node p, LinkedList<String> travel) {
         if (p != null) {
             travel.add(p.getString());
             preOrder(p.getLeft(), travel);
             preOrder(p.getRight(), travel);
         }
-    }
+    } 
 
-    static public void inOrder(Node p, LinkedList<String> travel) {
+    public void inOrder(Node p, LinkedList<String> travel) {
         if (p != null) {
             inOrder(p.getLeft(), travel);
             travel.add(p.getString());
@@ -123,7 +123,7 @@ public class TreeManager {
         }
     }
 
-    static public void postOrder(Node p, LinkedList<String> travel) {
+    public void postOrder(Node p, LinkedList<String> travel) {
         if (p != null) {
             postOrder(p.getLeft(), travel);
             postOrder(p.getRight(), travel);
@@ -131,7 +131,7 @@ public class TreeManager {
         }
     }
 
-    static public void levelOrder(Node root, LinkedList<String> travel) {
+    public void levelOrder(Node root, LinkedList<String> travel) {
         if (root != null) {
             LinkedList<Node> queue = new LinkedList<>();
             queue.addLast(root);
@@ -149,7 +149,7 @@ public class TreeManager {
         }
     }
 
-    static public void levelNodes(Node p, int level) {
+    public void levelNodes(Node p, int level) {
         if (p != null) {
             String string = p.getString();
             int lvl = p.getLevel();
@@ -169,7 +169,7 @@ public class TreeManager {
         }
     }
 
-    static public boolean leaf(Node p) {
+    public boolean leaf(Node p) {
         if (p != null) {
             if (p.getLeft() != null || p.getRight() != null) {
                 return false;
@@ -179,7 +179,7 @@ public class TreeManager {
         return false;
     }
 
-    static public void offspring(Node p) {
+    public void offspring(Node p) {
         if (p != null) {
             sons++;
             offspring(p.getLeft());
@@ -187,13 +187,13 @@ public class TreeManager {
         }
     }
 
-    static public int nodes(Node p) {
+    public int nodes(Node p) {
         clean();
         offspring(p);
         return sons + 1;
     }
 
-    static public void height(Node p, int num) {
+    public void height(Node p, int num) {
         if (p != null) {
             //if (num > height) { //Doesnt matter...
             //    height = num;
@@ -206,13 +206,13 @@ public class TreeManager {
         }
     }
 
-    static public void clean() {
+    private void clean() {
         sons = -1;
         height = 0;
         levels = new LinkedList<>();
     }
 
-    static public Tree get(String name) {
+    public Tree get(String name) {
         for (int i = 0; i < forest.size(); i++) {
             Tree tree = forest.get(i);
             if (tree.getName().equals(name)) {
@@ -222,7 +222,7 @@ public class TreeManager {
         return null;
     }
 
-    static public void saveAll() {
+    public void saveAll() {
         if (forest != null) {
             for (int i = 0; i < forest.size(); i++) {
                 forest.get(i).save();
@@ -233,7 +233,7 @@ public class TreeManager {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         String string = "";
         int op, treeIndex;
         Tree tree;
@@ -378,6 +378,6 @@ public class TreeManager {
             System.out.println("\n");
             //System.out.println("\n\n");
         } while (op != 0);
-    }
+    }*/
 
 }
