@@ -21,7 +21,7 @@ public class Tree implements java.io.Serializable {
 
     private String name;
     private Node root;
-    private LinkedList<Node> stack = new LinkedList<>();
+    private LinkedList<Node> stack;
     private int sons = -1, height = 0;
 
     private final String fileRoute;
@@ -34,6 +34,7 @@ public class Tree implements java.io.Serializable {
         if (checkFile()) {
             setId();
         }
+        stack = new LinkedList<>();
         this.setRoot(null);
         this.name = "";
         ownId = id++;
@@ -44,6 +45,8 @@ public class Tree implements java.io.Serializable {
         if (checkFile()) {
             setId();
         }
+        stack = new LinkedList<>();
+        this.setRoot(null);
         this.name = name;
         ownId = id;
         id++;
@@ -59,6 +62,7 @@ public class Tree implements java.io.Serializable {
                     q.setLevel(0);
                     q.setPosition(0);
                     setRoot(q);
+                    stack.add(q);
                     setSons(getSons() + 1);
                 } else {
                     Node p = getRoot(), antp = null;
@@ -277,6 +281,14 @@ public class Tree implements java.io.Serializable {
         return bigger;
     }
 
+    public String get() {
+        try {
+            return stack.getLast().getString();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     //BUFFERING METHODS
     private boolean checkFile() {
         storer = new File(fileRoute);
@@ -303,6 +315,9 @@ public class Tree implements java.io.Serializable {
             }
             id = cont;
             //System.out.println(id);
+
+            br.close();
+            fr.close();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
