@@ -7,7 +7,6 @@ package tree;
 
 import linkedlist.LinkedList;
 import java.util.Scanner;
-import tree.Tree;
 
 /**
  *
