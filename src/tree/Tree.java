@@ -221,15 +221,22 @@ public class Tree implements java.io.Serializable {
             }
             if (!direction) {
                 p = stack.getLast().getLeft();
+                if (p != null) {
+                    string = p.getString();
+                    stack.add(p);
+                } else {
+                    string = "No se!";
+                }
             } else {
                 p = stack.getLast().getRight();
+                if (p != null) {
+                    string = p.getString();
+                    stack.add(p);
+                } else {
+                    string = "Juego Terminado!";
+                }
             }
-            if (p != null) {
-                string = p.getString();
-                stack.add(p);
-            } else {
-                string = "No se!";
-            }
+            
         }
         return string;
     }
